@@ -1,2 +1,5 @@
-# xc
-Scripts and Notes for Cross-Compilations
+# XC: Scripts and Notes of Cross-Compilations
+
+## Directories
+
+* `android`: Cross-compilations for Android.
