@@ -23,6 +23,8 @@ $(NDK_INSTALL_DIR):
 	$(MKDIR) $@
 	$(ANDROID_NDK_ROOT)/build/tools/make-standalone-toolchain.sh --platform=$(ANDROID_PLATFORM) --toolchain=$(ANDROID_TOOLCHAIN) --install-dir=$(NDK_INSTALL_DIR) || $(RM) $@
 
+# This script is based on:
+#   http://stackoverflow.com/questions/4285605/android-ndk-compile-gmp-library
 $(NDK_SETENV): $(NDK_INSTALL_DIR)
 	$(RM) $(NDK_SETENV)
 	touch $(NDK_SETENV)
