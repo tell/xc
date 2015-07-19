@@ -9,7 +9,7 @@
 
 ## How to Use
 
-First of all, `ndk-standalone` is needed to build other packages. Then please go to other subdirectories.
+First of all, `ndk-standalone` is needed to build other packages. Thus, build it, and then go to other subdirectories.
 
 Built binaries, headers, and documents will be installed into a directory `prefix`.
 
