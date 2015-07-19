@@ -9,8 +9,11 @@
 
 ## How to Use
 
-Suppose that `ndk-standalone`, `openssl`, and `gmp` are built and installed.
+First of all, `ndk-standalone` is needed to build other packages. Then please go to other subdirectories.
 
+Built binaries, headers, and documents will be installed into a directory `prefix`.
+
+An example of usage of the packages in this directory:
 ```
 $ cd ndk-standalone
 $ . setenv.sh
