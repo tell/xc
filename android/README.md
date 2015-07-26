@@ -13,10 +13,4 @@ First of all, `ndk-standalone` is needed to build other packages. Thus, build it
 
 Built binaries, headers, and documents will be installed into a directory `prefix`.
 
-An example of usage of the packages in this directory:
-```
-$ cd ndk-standalone
-$ . setenv.sh
-$ cd ..
-$ export LDFLAGS="-L`pwd`/prefix/lib"
-```
+A usage of the packages in this directory, load `ndk-standalone/setenv.sh` to use the standalone compiler, and then refer the directory `prefix` to use header files and libraries.
