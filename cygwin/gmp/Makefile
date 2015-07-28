@@ -1,11 +1,12 @@
 include ../common.mk
 include config.mk
 
-CONFIG_OPTS_COMMON = --host=$(GMP_HOST_ARCH) --enable-cxx --disable-localeconv
+CONFIG_OPTS_COMMON = --prefix=$(CYGWIN_PREFIX_PATH) --host=$(GMP_HOST_ARCH) --enable-cxx
 ifneq (,$(GMP_BUILD_ARCH))
   CONFIG_OPTS_COMMON += --build=$(GMP_BUILD_ARCH)
 endif
 
+SETENV_SCRIPT = ../setenv-mingw32.bash
 MARKING_FILES = check_pre_req configured_static configured_shared built_static built_shared
 OUT_DIRS = static-lib shared-lib
 
@@ -13,8 +14,9 @@ OUT_DIRS = static-lib shared-lib
 all: check_pre_req built_static built_shared
 
 check:
-	$(MAKE) -C static-lib check
-	$(MAKE) -C shared-lib check
+	bash workaround.bash
+	. $(SETENV_SCRIPT) && $(MAKE) -C static-lib check
+	. $(SETENV_SCRIPT) && $(MAKE) -C shared-lib check
 
 clean:
 	$(RM) -fr $(MARKING_FILES) $(OUT_DIRS)
