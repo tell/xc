@@ -14,32 +14,33 @@ endif
 export LIBGMP_LDFLAGS
 export LIBGMPXX_LDFLAGS
 
+MARKING_FILES = check_pre_req configured built
+
 .PHONY: all clean install
-all: $(GMP_DIR) built
+all: check_pre_req built
 
 clean:
 	-$(MAKE) -C $(GMP_BUILD) clean
-	-$(RM) $(GMP_BUILD) configured built
+	-$(MAKE) -C $(GMP_BUILD) distclean
+	-$(RM) $(GMP_BUILD) $(MARKING_FILES)
 
 install:
 	$(MAKE) -C $(GMP_BUILD) install
 
 built: configured
-	$(MAKE) -C $(GMP_BUILD) -j 8
+	$(MAKE) -C $(GMP_BUILD) -j $(NUM_PARALLEL_BUILD)
 	touch $@
 
-configured: $(GMP_BUILD)
-	cd $(GMP_BUILD) && ../$(GMP_DIR)/configure --prefix=$(GMP_PREFIX) --host=$(GMP_HOST) --enable-cxx
+configured:
+	$(MKDIR) $(GMP_BUILD)
+	cd $(GMP_BUILD) && $(GMP_DIR_PATH)/configure --prefix=$(GMP_PREFIX) --host=$(GMP_HOST) --enable-cxx
 	touch $@
-
-$(GMP_DIR): $(GMP_TAR)
-	$(TAR) xf $<
-
-$(GMP_TAR):
-	$(WGET) $(GMP_URL)
-
-$(GMP_BUILD):
-	$(MKDIR) $@
 
 $(GMP_PREFIX):
 	$(MKDIR) $@
+
+check_pre_req: $(GMP_DIR_PATH)
+	touch $@
+
+$(GMP_DIR_PATH):
+	$(MAKE) -C $(GMP_DIR_PREFIX)
