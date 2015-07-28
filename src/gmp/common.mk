@@ -1,0 +1,2 @@
+TAR = tar
+WGET = wget
