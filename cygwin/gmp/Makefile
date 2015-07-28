@@ -1,13 +1,20 @@
 include ../common.mk
 include config.mk
 
-CONFIG_OPTS_COMMON = --build=$(GMP_BUILD_ARCH) --host=$(GMP_HOST_ARCH) --enable-cxx
+CONFIG_OPTS_COMMON = --host=$(GMP_HOST_ARCH) --enable-cxx --disable-localeconv
+ifneq (,$(GMP_BUILD_ARCH))
+  CONFIG_OPTS_COMMON += --build=$(GMP_BUILD_ARCH)
+endif
 
 MARKING_FILES = check_pre_req configured_static configured_shared built_static built_shared
 OUT_DIRS = static-lib shared-lib
 
-.PHONY: all clean
+.PHONY: all check clean
 all: check_pre_req built_static built_shared
+
+check:
+	$(MAKE) -C static-lib check
+	$(MAKE) -C shared-lib check
 
 clean:
 	$(RM) -fr $(MARKING_FILES) $(OUT_DIRS)
