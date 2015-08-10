@@ -8,4 +8,4 @@ export RANLIB=x86_64-w64-mingw32-ranlib.exe
 export OBJDUMP=x86_64-w64-mingw32-objdump.exe
 export STRIP=x86_64-w64-mingw32-strip.exe
 
-export PATH=${PATH}:/usr/x86_64-w64-mingw32/sys-root/mingw/bin
+export PATH=$PATH:/usr/x86_64-w64-mingw32/sys-root/mingw/bin
