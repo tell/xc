@@ -7,45 +7,56 @@ ifneq (,$(GMP_BUILD_ARCH))
 endif
 
 SETENV_SCRIPT = ../setenv-mingw32.bash
-MARKING_FILES = check_pre_req configured_static configured_shared built_static built_shared
 OUT_DIRS = static-lib shared-lib
 
-.PHONY: all check clean
-all: check_pre_req built_static built_shared
-
-check:
-	bash workaround.bash
-	. $(SETENV_SCRIPT) && $(MAKE) -C static-lib check
-	. $(SETENV_SCRIPT) && $(MAKE) -C shared-lib check
+.PHONY: all clean check do-workaround install
+all: checked_pre_req.mark built_static.mark built_shared.mark
 
 clean:
-	$(RM) -fr $(MARKING_FILES) $(OUT_DIRS)
+	$(RM) -fr $(OUT_DIRS) *.mark
 
-built_static: configured_static
+check: do-workaround checked_static.mark checked_shared.mark
+
+do-workaround:
+	bash workaround.bash
+
+install:
+	$(MAKE) -C static-lib install
+	$(MAKE) -C shared-lib install
+
+####
+
+checked_static.mark:
+	. $(SETENV_SCRIPT) && $(MAKE) -C static-lib check
+	touch $@
+
+checked_shared.mark:
+	. $(SETENV_SCRIPT) && $(MAKE) -C shared-lib check
+	touch $@
+
+built_static.mark: configured_static.mark
 	$(MAKE) -C static-lib -j $(NUM_PARALLEL_BUILD)
-	touch $@
+	touch static-lib && sleep 0.5 && touch $< && sleep 0.5 && touch $@
 
-built_shared: configured_shared
+built_shared.mark: configured_shared.mark
 	$(MAKE) -C shared-lib -j $(NUM_PARALLEL_BUILD)
+	touch shared-lib && sleep 0.5 && touch $< && sleep 0.5 && touch $@
+
+configured_static.mark: static-lib
+	cd $<; $(GMP_DIR_PATH)/configure --enable-static --disable-shared $(CONFIG_OPTS_COMMON)
 	touch $@
 
-configured_static: static-lib
+configured_shared.mark: shared-lib
+	cd $<; $(GMP_DIR_PATH)/configure --enable-shared --disable-static $(CONFIG_OPTS_COMMON)
 	touch $@
 
 static-lib:
 	$(MKDIR) $@
-	cd $@; \
-	$(GMP_DIR_PATH)/configure --enable-static --disable-shared $(CONFIG_OPTS_COMMON)
-
-configured_shared: shared-lib
-	touch $@
 
 shared-lib:
 	$(MKDIR) $@
-	cd $@; \
-	$(GMP_DIR_PATH)/configure --enable-shared --disable-static $(CONFIG_OPTS_COMMON)
 
-check_pre_req: $(GMP_DIR_PATH)
+checked_pre_req.mark: $(GMP_DIR_PATH)
 	touch $@
 
 $(GMP_DIR_PATH):

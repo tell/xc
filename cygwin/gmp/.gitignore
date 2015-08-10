@@ -1,5 +1,3 @@
+*.mark
 static-lib/
 shared-lib/
-built_*
-configured_*
-check_pre_req
